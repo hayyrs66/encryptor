@@ -1,4 +1,8 @@
-<section class="w-full h-screen pt-28 pb-10 px-5">
+---
+import Button from "@components/Button.astro";
+---
+
+<section class="w-full h-screen pt-24 pb-16 px-5">
   <div class="grid grid-cols-2fr-1fr w-full h-full gap-8">
     <div class="w-full h-full">
       <textarea
@@ -8,8 +12,12 @@
       ></textarea>
     </div>
     <div
-      class="w-full h-full bg-[#1f283b]/50 rounded-sm outline outline-white/5 backdrop-blur"
+      class="w-full h-full bg-[#1f283b]/50 rounded-sm outline outline-white/5 text-[#ac288b] backdrop-blur"
     >
     </div>
+  </div>
+  <div class="flex gap-4">
+    <Button title="Encriptar" bgColor="106b96" />
+    <Button title="Desencriptar" bgColor="132941" />
   </div>
 </section>
