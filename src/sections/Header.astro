@@ -1,5 +1,9 @@
+---
+import { Icon } from "astro-icon/components";
+---
+
 <header
-  class="w-full absolute top-0 left-0 flex justify-between items-center px-5 py-4 border-b border-b-white/20"
+  class="w-full absolute top-0 left-0 flex justify-between items-center px-5 py-2 border-b border-b-white/10 backdrop-blur-2xl"
 >
   <a
     href="/"
@@ -12,13 +16,15 @@
     />
     Encrypter
   </a>
-  <nav class="flex gap-4">
+  <nav class="flex justify-center items-center gap-4">
     <a
       href="https://github.com/hayyrs66"
       target="_blank"
-      class="text-link-gray text-sm cursor-pointer text-md font-semibold transition-colors hover:text-link-gray-hover"
-      >Github</a
-    >
+      class="flex gap-2 bg-white/10 px-2 py-1 rounded-md text-link-gray text-sm cursor-pointer text-md font-semibold transition-colors hover:text-link-gray-hover hover:bg-white/20"
+      >Github
+
+      <Icon name="github" size={20} color="white" />
+    </a>
     <a
       href="https://ricardoguevara.vercel.app/"
       target="_blank"
