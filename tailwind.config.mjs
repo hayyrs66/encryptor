@@ -11,6 +11,9 @@ export default {
         "link-gray": "hsl(0 0% 98%/0.6)",
         "link-gray-hover": "hsl(0 0% 98%/0.8)",
       },
+      gridTemplateColumns: {
+        "2fr-1fr": "2fr 1fr",
+      },
     },
   },
   plugins: [],
