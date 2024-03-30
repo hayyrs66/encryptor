@@ -2,9 +2,10 @@
 interface Props {
   title: string;
   bgColor: string;
+  id: string;
 }
 
-const { title, bgColor } = Astro.props;
+const { title, bgColor, id} = Astro.props;
 
 const colorVariants = {
   "106b96":
@@ -14,4 +15,4 @@ const colorVariants = {
 };
 ---
 
-<button class=`${colorVariants[bgColor]}`>{title}</button>
+<button id={id} class=`${colorVariants[bgColor]}`>{title}</button>
