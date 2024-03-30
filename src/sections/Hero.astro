@@ -1,26 +1,88 @@
 ---
 import Button from "@components/Button.astro";
+import { Icon } from "astro-icon/components";
 ---
 
-<section class="w-full h-screen pt-24 pb-16 px-5">
-  <div class="grid grid-cols-2fr-1fr w-full h-full gap-8">
-    <div class="w-full h-full">
+<section class="w-full h-full md:h-screen pt-24 pb-16 px-5 flex  flex-col justify-center">
+  <div class="grid grid-cols-1 w-full h-full gap-8 max-h-[1000px]
+  md:grid-cols-2fr-1fr">
+
+  <div class="flex flex-col w-full h-full">
+    <div  id="input" class="w-full h-full min-h-[300px]">
       <textarea
-        placeholder="Ingrese el texto aqui..."
-        class="outline-none w-full h-full outline outline-white/5 rounded-sm resize-none bg-[#0f1726]/50
-         backdrop-blur border-none p-5 text-white placeholder:text-slate-400"
+      placeholder="Ingrese el texto aqui..."
+      class="outline-none w-full h-full outline outline-white/5 rounded-sm resize-none bg-[#0f1726]/50
+      backdrop-blur border-none p-5 text-white placeholder:text-slate-400"
       ></textarea>
     </div>
-    <div
-      class="w-full h-full flex flex-col justify-center items-center bg-[#1f283b]/50 rounded-sm outline outline-white/5  backdrop-blur"
-    >
-    <img src="/woman.svg" alt="woman" class="aspect-square" width="200">
-    <h4 class="text-white text-xl font-semibold text-center text-balance leading-relaxed">Ningún mensaje fue encontrado</h4>
-    <p class="text-gray-400 text-sm max-w-[340px] text-center text-balance leading-snug">Ingresa el texto que desees encriptar o desencriptar.</p>
+    <div class="flex gap-4">
+      <Button title="Encriptar" bgColor="106b96" />
+      <Button title="Desencriptar" bgColor="132941"/>
     </div>
   </div>
-  <div class="flex gap-4">
-    <Button title="Encriptar" bgColor="106b96" />
-    <Button title="Desencriptar" bgColor="132941"/>
+    <div
+    id="output"
+      class="w-full h-fit flex flex-col justify-center items-center bg-[#1f283b]/50 rounded-sm outline outline-white/5  backdrop-blur relative p-5"
+    >
+    <button class="absolute top-0 right-0 text-xs m-2 flex gap-2 itms-center justify-center text-gray-400 bg-gray-700 px-2 py-1 rounded-md hover:bg-gray-600 transition-colors hover:text-gray-200">
+      <span>Copiar</span>
+      <Icon name="copy" size={15} class="m-auto" />
+    </button>
+
+    <div id="output-content" class="flex flex-col justify-center items-center">
+      <div class="">
+        <p id="text-content" class=""></p>
+      </div>
+      <div class="flex flex-col justify-center items-center">
+        <img src="/woman.svg" alt="woman" class="aspect-square" width="200">
+        <h4 class="text-white text-xl font-semibold text-center text-balance leading-tight mb-2">Ningún mensaje fue encontrado</h4>
+        <p class="text-gray-400 text-sm max-w-[340px] text-center text-balance leading-snug">Ingresa el texto que desees encriptar o desencriptar.</p>
+      </div>
+      </div>
+    </div>
   </div>
 </section>
+
+<script>
+
+//reisze output container  
+
+const outputContainer = document.getElementById("output");
+const inputContainer = document.getElementById("input");
+
+function updateOutputContainerHeight() {
+  outputContainer.style.height = inputContainer.offsetHeight + "px";
+  
+  if (window.innerWidth < 768) {
+    outputContainer.style.height = "100%";
+  }
+}
+
+function updateOutputContainerHeightOnAnimationFrame() {
+  requestAnimationFrame(updateOutputContainerHeight);
+}
+
+updateOutputContainerHeight();
+
+window.addEventListener("resize", updateOutputContainerHeightOnAnimationFrame);
+
+//encrypt and decrypt functions
+const textArea = document.querySelector("textarea");
+const outputContent = document.getElementById("output-content");
+const textContent = document.getElementById("text-content");
+
+textArea.addEventListener("input", (e) => {
+
+  const contenido = (e.target as HTMLTextAreaElement).value.trim();
+  
+  if(contenido !== "") {
+    outputContent.style.display = "none";
+
+  } else {
+    outputContent.style.display = "flex";
+  }
+  
+}
+);
+  
+</script>
