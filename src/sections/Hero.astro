@@ -3,94 +3,161 @@ import Button from "@components/Button.astro";
 import { Icon } from "astro-icon/components";
 ---
 
-<section class="w-full h-full md:h-screen pt-24 pb-16 px-5 flex  flex-col justify-center">
-  <div class="grid grid-cols-1 w-full h-full gap-8 max-h-[1000px]
-  md:grid-cols-2fr-1fr">
-
-  <div class="flex flex-col w-full h-full">
-    <div  id="input" class="w-full h-full min-h-[300px]">
-      <textarea
-      placeholder="Ingrese el texto aqui..."
-      class="outline-none w-full h-full outline outline-white/5 rounded-sm resize-none bg-[#0f1726]/50
+<section
+  class="w-full h-full md:h-screen pt-24 pb-16 px-5 flex flex-col justify-center"
+>
+  <div
+    class="grid grid-cols-1 w-full h-full gap-8 max-h-[1000px]
+  md:grid-cols-2fr-1fr"
+  >
+    <div class="flex flex-col w-full h-full">
+      <div id="input" class="w-full h-full min-h-[300px]">
+        <textarea
+          placeholder="Ingrese el texto aqui..."
+          class="outline-none w-full h-full outline outline-white/5 rounded-sm resize-none bg-[#0f1726]/50
       backdrop-blur border-none p-5 text-white placeholder:text-slate-400"
-      ></textarea>
+        ></textarea>
+      </div>
+      <div class="flex gap-4">
+        <Button title="Encriptar" bgColor="106b96" id="encrypt-btn" />
+        <Button title="Desencriptar" bgColor="132941" id="decrypt-btn" />
+      </div>
     </div>
-    <div class="flex gap-4">
-      <Button title="Encriptar" bgColor="106b96" />
-      <Button title="Desencriptar" bgColor="132941"/>
-    </div>
-  </div>
     <div
-    id="output"
-      class="w-full h-fit flex flex-col justify-center items-center bg-[#1f283b]/50 rounded-sm outline outline-white/5  backdrop-blur relative p-5"
+      id="output"
+      class="w-full h-fit flex flex-col justify-center items-center bg-[#1f283b]/50 rounded-sm outline outline-white/5 backdrop-blur relative p-5"
     >
-    <button class="absolute top-0 right-0 text-xs m-2 flex gap-2 itms-center justify-center text-gray-400 bg-gray-700 px-2 py-1 rounded-md hover:bg-gray-600 transition-colors hover:text-gray-200">
-      <span>Copiar</span>
-      <Icon name="copy" size={15} class="m-auto" />
-    </button>
+    <span class="absolute top-0 left-0 px-2 py-1 m-2 tracking-tight text-gray-400">Salida</span>
+      <button
+        class="absolute top-0 right-0 text-xs m-2 flex gap-2 itms-center justify-center text-gray-400 bg-gray-700 px-2 py-1 rounded-md hover:bg-gray-600 transition-colors hover:text-gray-200"
+      >
+        <span>Copiar</span>
+        <Icon name="copy" size={15} class="m-auto" />
+      </button>
 
-    <div id="output-content" class="flex flex-col justify-center items-center">
-      <div class="">
-        <p id="text-content" class=""></p>
-      </div>
-      <div class="flex flex-col justify-center items-center">
-        <img id="waiting-img" src="/woman.svg" alt="woman" class="aspect-square" width="200">
-        <h4 id="waiting-title" class="text-white text-xl font-semibold text-center text-balance leading-tight mb-2">Ningún mensaje fue encontrado</h4>
-        <p id="waiting-paragraph" class="text-gray-400 text-sm max-w-[340px] text-center text-balance leading-snug">Ingresa el texto que desees encriptar o desencriptar.</p>
-      </div>
+      <div
+        id="output-content"
+        class="flex flex-col justify-center items-center"
+      >
+        <div class="flex justify-start items-start w-full h-full">
+          <p id="text-content" class="tracking-tight text-white text-base"></p>
+        </div>
+        <div
+          id="output-waiting"
+          class="flex flex-col justify-center items-center"
+        >
+          <img
+            id="waiting-img"
+            src="/woman.svg"
+            alt="woman"
+            class="aspect-square"
+            width="200"
+          />
+          <h4
+            id="waiting-title"
+            class="text-white text-xl font-semibold text-center text-balance leading-tight mb-2"
+          >
+            Ningún mensaje fue encontrado
+          </h4>
+          <p
+            id="waiting-paragraph"
+            class="text-gray-400 text-sm max-w-[340px] text-center text-balance leading-snug"
+          >
+            Ingresa el texto que desees encriptar o desencriptar.
+          </p>
+        </div>
       </div>
     </div>
   </div>
 </section>
 
 <script>
+  //reisze output container
 
-//reisze output container  
+  const outputContainer = document.getElementById("output");
+  const inputContainer = document.getElementById("input");
 
-const outputContainer = document.getElementById("output");
-const inputContainer = document.getElementById("input");
+  function updateOutputContainerHeight() {
+    outputContainer.style.height = inputContainer.offsetHeight + "px";
 
-function updateOutputContainerHeight() {
-  outputContainer.style.height = inputContainer.offsetHeight + "px";
-  
-  if (window.innerWidth < 768) {
-    outputContainer.style.height = "100%";
+    if (window.innerWidth < 768) {
+      outputContainer.style.height = "100%";
+    }
   }
-}
 
-function updateOutputContainerHeightOnAnimationFrame() {
-  requestAnimationFrame(updateOutputContainerHeight);
-}
-
-updateOutputContainerHeight();
-
-window.addEventListener("resize", updateOutputContainerHeightOnAnimationFrame);
-
-//encrypt and decrypt functions
-const textArea = document.querySelector("textarea");
-const outputContent = document.getElementById("output-content");
-const textContent = document.getElementById("text-content");
-const waitingImg = document.querySelector("#output-content img") as HTMLImageElement;
-
-const waitingTitle = document.getElementById("waiting-title");
-const waitingParagraph = document.getElementById("waiting-paragraph");
-
-textArea.addEventListener("input", (e) => {
-
-  const content = (e.target as HTMLTextAreaElement).value.trim();
-  
-  if(content !== "") {
-    waitingImg.src = "paper.svg"
-    waitingTitle.textContent = "Esperando acción..."
-    waitingParagraph.textContent = "Presione el botón de encriptar o desencriptar para ver el resultado."
-
-  } else {
-    waitingImg.src = "woman.svg"
-    waitingTitle.textContent = "Ningún mensaje fue encontrado"
-    waitingParagraph.textContent = "Ingresa el texto que desees encriptar o desencriptar."
+  function updateOutputContainerHeightOnAnimationFrame() {
+    requestAnimationFrame(updateOutputContainerHeight);
   }
-  
-}
-);
-  
+
+  updateOutputContainerHeight();
+
+  window.addEventListener(
+    "resize",
+    updateOutputContainerHeightOnAnimationFrame
+  );
+
+  //change content of output container
+  const textArea = document.querySelector("textarea");
+  const outputContent = document.getElementById("output-content");
+  const encryptedField = document.getElementById("text-content");
+  const waitingImg = document.querySelector(
+    "#output-content img"
+  ) as HTMLImageElement;
+
+  const waitingTitle = document.getElementById("waiting-title");
+  const waitingParagraph = document.getElementById("waiting-paragraph");
+
+  textArea.addEventListener("input", (e) => {
+    const content = (e.target as HTMLTextAreaElement).value.trim();
+
+    if (content !== "") {
+      waitingImg.src = "paper.svg";
+      waitingTitle.textContent = "Esperando acción...";
+      waitingParagraph.textContent =
+        "Presione el botón de encriptar o desencriptar para ver el resultado.";
+    } else {
+      waitingImg.src = "woman.svg";
+      waitingTitle.textContent = "Ningún mensaje fue encontrado";
+      waitingParagraph.textContent =
+        "Ingresa el texto que desees encriptar o desencriptar.";
+    }
+
+    // encrypt and decrypt functions
+    const encryptBtn = document.getElementById("encrypt-btn");
+    const decryptBtn = document.getElementById("decrypt-btn");
+    const outputWaiting = document.getElementById("output-waiting");
+
+    const encrypt = (text) => {
+      text = text.replace(/e/g, "enter");
+      text = text.replace(/i/g, "imes");
+      text = text.replace(/a/g, "ai");
+      text = text.replace(/o/g, "ober");
+      text = text.replace(/u/g, "ufat");
+
+      return text;
+    };
+
+    const decrypt = (text) => {
+      text = text.replace(/enter/g, "e");
+      text = text.replace(/imes/g, "i");
+      text = text.replace(/ai/g, "a");
+      text = text.replace(/ober/g, "o");
+      text = text.replace(/ufat/g, "u");
+
+      return text;
+    };
+
+    encryptBtn.addEventListener("click", () => {
+      outputContent.style.justifyContent = "start";
+      outputContent.style.alignItems = "start";
+      outputWaiting.style.display = "none";
+
+      encryptedField.textContent = encrypt(content);
+    });
+
+    decryptBtn.addEventListener("click", () => {
+      outputWaiting.style.display = "none";
+      encryptedField.textContent = decrypt(content);
+    });
+  });
 </script>
