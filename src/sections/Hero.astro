@@ -242,9 +242,9 @@ import { Icon } from "astro-icon/components";
 
     if (text.length > 0) {
       navigator.clipboard.writeText(text).then(() => {
-        copyIcon.src = "src/icons/check.svg";
+        copyIcon.src = "/check.svg";
         setTimeout(() => {
-          copyIcon.src = "src/icons/copy.svg";
+          copyIcon.src = "/copy.svg";
         }, 1200);
       });
     }
