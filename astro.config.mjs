@@ -7,9 +7,7 @@ import icon from "astro-icon";
 // https://astro.build/config
 export default defineConfig({
   output: "static",
-  integrations: [react(), tailwind({
-    applyBaseStyles: false,
-  }), icon(
+  integrations: [react(), tailwind(), icon(
     {
       include:{
         lucide: ["github", "info"],
