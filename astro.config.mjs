@@ -8,7 +8,9 @@ import icon from "astro-icon";
 export default defineConfig({
   integrations: [react(), tailwind(), icon(
     {
-      include: ["src/icons/*.svg"],
+      include: {
+        mdi: ["github", "info"],
+      },
     },
 
   )],
