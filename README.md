@@ -56,5 +56,5 @@ To get started with this project, follow these steps:
 ¡Las contribuciones son bienvenidas! Siéntete libre de abrir un issue o enviar un pull request para cualquier mejora o característica que te gustaría agregar.
 ## Screenshots
 
-![App Screenshot](/hero.png)
+![App Screenshot](/public/hero.png)
 
