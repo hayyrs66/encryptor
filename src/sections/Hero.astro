@@ -25,14 +25,18 @@ import { Icon } from "astro-icon/components";
     </div>
     <div
       id="output"
-      class="w-full h-fit flex flex-col justify-center items-center bg-[#1f283b]/50 rounded-sm outline outline-white/5 backdrop-blur relative p-5"
+      class="w-full flex flex-col justify-center items-center bg-[#1f283b]/50 rounded-sm outline outline-white/5 backdrop-blur relative p-5"
     >
-    <span class="absolute top-0 left-0 px-2 py-1 m-2 tracking-tight text-gray-400">Salida</span>
+      <span
+        class="absolute top-0 left-0 px-2 py-1 m-2 tracking-tight text-gray-400"
+        >Salida</span
+      >
       <button
+        id="copy"
         class="absolute top-0 right-0 text-xs m-2 flex gap-2 itms-center justify-center text-gray-400 bg-gray-700 px-2 py-1 rounded-md hover:bg-gray-600 transition-colors hover:text-gray-200"
       >
         <span>Copiar</span>
-        <Icon name="copy" size={15} class="m-auto" />
+        <img src="src/icons/copy.svg" alt="copy" />
       </button>
 
       <div
@@ -40,7 +44,8 @@ import { Icon } from "astro-icon/components";
         class="flex flex-col justify-center items-center"
       >
         <div class="flex justify-start items-start w-full h-full">
-          <p id="text-content" class="tracking-tight text-white text-base"></p>
+          <p id="text-content" class="tracking-tight text-white mt-8 text-base">
+          </p>
         </div>
         <div
           id="output-waiting"
@@ -72,10 +77,21 @@ import { Icon } from "astro-icon/components";
 </section>
 
 <script>
-  //reisze output container
+  // change of content of output container
+  const textArea = document.querySelector("textarea");
+  const encryptedField = document.getElementById("text-content");
+  const waitingImg = document.querySelector(
+    "#output-content img"
+  ) as HTMLImageElement;
 
+  const waitingTitle = document.getElementById("waiting-title");
+  const waitingParagraph = document.getElementById("waiting-paragraph");
+  const encryptBtn = document.getElementById("encrypt-btn");
+  const decryptBtn = document.getElementById("decrypt-btn");
+  const outputWaiting = document.getElementById("output-waiting");
   const outputContainer = document.getElementById("output");
   const inputContainer = document.getElementById("input");
+  const copyBtn = document.getElementById("copy");
 
   function updateOutputContainerHeight() {
     outputContainer.style.height = inputContainer.offsetHeight + "px";
@@ -85,79 +101,116 @@ import { Icon } from "astro-icon/components";
     }
   }
 
-  function updateOutputContainerHeightOnAnimationFrame() {
-    requestAnimationFrame(updateOutputContainerHeight);
-  }
+
+  // requestAnnimationFrame functionality to update output container height
+  // only if the resize event is triggered or lag is present
+
+  // function updateOutputContainerHeightOnAnimationFrame() {
+  //   requestAnimationFrame(updateOutputContainerHeight);
+  // }
 
   updateOutputContainerHeight();
 
-  window.addEventListener(
-    "resize",
-    updateOutputContainerHeightOnAnimationFrame
-  );
-
-  //change content of output container
-  const textArea = document.querySelector("textarea");
-  const outputContent = document.getElementById("output-content");
-  const encryptedField = document.getElementById("text-content");
-  const waitingImg = document.querySelector(
-    "#output-content img"
-  ) as HTMLImageElement;
-
-  const waitingTitle = document.getElementById("waiting-title");
-  const waitingParagraph = document.getElementById("waiting-paragraph");
-
   textArea.addEventListener("input", (e) => {
-    const content = (e.target as HTMLTextAreaElement).value.trim();
-
+    let content = (e.target as HTMLTextAreaElement).value.trim();
     if (content !== "") {
-      waitingImg.src = "paper.svg";
-      waitingTitle.textContent = "Esperando acción...";
-      waitingParagraph.textContent =
-        "Presione el botón de encriptar o desencriptar para ver el resultado.";
+      showWaitingTextareaMessage();
     } else {
-      waitingImg.src = "woman.svg";
-      waitingTitle.textContent = "Ningún mensaje fue encontrado";
-      waitingParagraph.textContent =
-        "Ingresa el texto que desees encriptar o desencriptar.";
+      showEmptyTextareaMessage();
     }
-
-    // encrypt and decrypt functions
-    const encryptBtn = document.getElementById("encrypt-btn");
-    const decryptBtn = document.getElementById("decrypt-btn");
-    const outputWaiting = document.getElementById("output-waiting");
-
-    const encrypt = (text) => {
-      text = text.replace(/e/g, "enter");
-      text = text.replace(/i/g, "imes");
-      text = text.replace(/a/g, "ai");
-      text = text.replace(/o/g, "ober");
-      text = text.replace(/u/g, "ufat");
-
-      return text;
-    };
-
-    const decrypt = (text) => {
-      text = text.replace(/enter/g, "e");
-      text = text.replace(/imes/g, "i");
-      text = text.replace(/ai/g, "a");
-      text = text.replace(/ober/g, "o");
-      text = text.replace(/ufat/g, "u");
-
-      return text;
-    };
-
-    encryptBtn.addEventListener("click", () => {
-      outputContent.style.justifyContent = "start";
-      outputContent.style.alignItems = "start";
-      outputWaiting.style.display = "none";
-
-      encryptedField.textContent = encrypt(content);
-    });
-
-    decryptBtn.addEventListener("click", () => {
-      outputWaiting.style.display = "none";
-      encryptedField.textContent = decrypt(content);
-    });
   });
+
+  // encrypt and decrypt functions
+  const encrypt = (text) => {
+    text = text.replace(/e/g, "enter");
+    text = text.replace(/i/g, "imes");
+    text = text.replace(/a/g, "ai");
+    text = text.replace(/o/g, "ober");
+    text = text.replace(/u/g, "ufat");
+
+    return text;
+  };
+
+  const decrypt = (text) => {
+    text = text.replace(/enter/g, "e");
+    text = text.replace(/imes/g, "i");
+    text = text.replace(/ai/g, "a");
+    text = text.replace(/ober/g, "o");
+    text = text.replace(/ufat/g, "u");
+
+    return text;
+  };
+
+  // add event listeners to buttons
+  encryptBtn.addEventListener("click", () => {
+    const content = textArea.value.trim();
+    if (content.length > 0) {
+      showWaitingTextareaMessage();
+      outputContainer.style.justifyContent = "start";
+      outputContainer.style.alignItems = "start";
+      outputWaiting.style.display = "none";
+      const encryptedText = encrypt(content);
+      encryptedField.textContent = encryptedText;
+      console.log("--------------------");
+      console.log("encriptar", encryptedText);
+      console.log("content: ", content);
+    } else {
+      showEmptyTextareaMessage();
+    }
+  });
+
+  decryptBtn.addEventListener("click", () => {
+    const content = textArea.value.trim();
+    if (content.length > 0) {
+      showWaitingTextareaMessage();
+      outputContainer.style.justifyContent = "start";
+      outputContainer.style.alignItems = "start";
+      outputWaiting.style.display = "none";
+      const decryptedText = decrypt(content);
+      encryptedField.textContent = decryptedText;
+      console.log("--------------------");
+      console.log("desencriptar", decryptedText);
+      console.log("content: ", content);
+    } else {
+      showEmptyTextareaMessage();
+    }
+  });
+
+  copyBtn.addEventListener("click", () => {
+    const text = encryptedField.textContent;
+    const copyIcon = document.querySelector("#copy img") as HTMLImageElement;
+
+    if (text.length > 0) {
+      navigator.clipboard.writeText(text).then(() => {
+        copyIcon.src = "src/icons/check.svg";
+        setTimeout(() => {
+          copyIcon.src = "src/icons/copy.svg";
+        }, 1200);
+      });
+    }
+  });
+
+  // show message when textarea is empty
+  function showEmptyTextareaMessage() {
+    waitingImg.src = "woman.svg";
+    waitingTitle.textContent = "Ningún mensaje fue encontrado";
+    waitingParagraph.textContent =
+      "Ingresa el texto que desees encriptar o desencriptar.";
+    outputWaiting.style.display = "flex";
+    encryptedField.textContent = "";
+    outputContainer.style.justifyContent = "center";
+    outputContainer.style.alignItems = "center";
+  }
+
+  // show message when textarea is waiting for action
+  function showWaitingTextareaMessage() {
+    waitingImg.src = "paper.svg";
+    waitingTitle.textContent = "Esperando acción...";
+    waitingParagraph.textContent =
+      "Presione el botón de encriptar o desencriptar para ver el resultado.";
+    outputWaiting.style.display = "flex";
+    encryptedField.textContent = "";
+    outputContainer.style.justifyContent = "center";
+    outputContainer.style.alignItems = "center";
+  }
 </script>
