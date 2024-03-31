@@ -11,16 +11,36 @@ import { Icon } from "astro-icon/components";
   md:grid-cols-2fr-1fr"
   >
     <div class="flex flex-col w-full h-full">
-      <div id="input" class="w-full h-full min-h-[300px]">
+      <div id="input" class="w-full h-full min-h-[400px]">
         <textarea
           placeholder="Ingrese el texto aqui..."
           class="outline-none w-full h-full outline outline-white/5 rounded-sm resize-none bg-[#0f1726]/50
       backdrop-blur border-none p-5 text-white placeholder:text-slate-400"
+      maxlength="150"
         ></textarea>
       </div>
-      <div class="flex gap-4">
-        <Button title="Encriptar" bgColor="106b96" id="encrypt-btn" />
-        <Button title="Desencriptar" bgColor="132941" id="decrypt-btn" />
+      <div class="flex flex-col mt-4">
+        <div class="flex flex-col gap-1">
+          <span
+            id="require-3"
+            class="flex gap-2 text-gray-400 text-sm font-normal"
+            ></span
+          >
+          <span
+            id="require-1"
+            class="flex gap-2 text-gray-400 text-sm font-normal"
+            ><Icon name="info" size={15} />No mayúsculas.</span
+          >
+          <span
+            id="require-2"
+            class="flex gap-2 text-gray-400 text-sm font-normal"
+            ><Icon name="info" size={15} />No carácteres especiales.</span
+          >
+        </div>
+        <div class="flex gap-4">
+          <Button title="Encriptar" bgColor="106b96" id="encrypt-btn" />
+          <Button title="Desencriptar" bgColor="132941" id="decrypt-btn" />
+        </div>
       </div>
     </div>
     <div
@@ -41,10 +61,10 @@ import { Icon } from "astro-icon/components";
 
       <div
         id="output-content"
-        class="flex flex-col justify-center items-center"
+        class="flex flex-col justify-center items-center "
       >
         <div class="flex justify-start items-start w-full h-full">
-          <p id="text-content" class="tracking-tight text-white mt-8 text-base">
+          <p id="text-content" class="tracking-tight text-white mt-8 text-base break-words max-w-[350px]">
           </p>
         </div>
         <div
@@ -92,6 +112,10 @@ import { Icon } from "astro-icon/components";
   const outputContainer = document.getElementById("output");
   const inputContainer = document.getElementById("input");
   const copyBtn = document.getElementById("copy");
+  
+
+  let mayusRequirement = true;
+  let specialCharsRequirement = true;
 
   function updateOutputContainerHeight() {
     outputContainer.style.height = inputContainer.offsetHeight + "px";
@@ -100,7 +124,6 @@ import { Icon } from "astro-icon/components";
       outputContainer.style.height = "100%";
     }
   }
-
 
   // requestAnnimationFrame functionality to update output container height
   // only if the resize event is triggered or lag is present
@@ -113,11 +136,39 @@ import { Icon } from "astro-icon/components";
 
   textArea.addEventListener("input", (e) => {
     let content = (e.target as HTMLTextAreaElement).value.trim();
+    const maxLength = 150;
+
+    const hasUpperCase = /[A-Z]/.test(content);
+    const hasSpecialChars =
+      /[áéíóúÁÉÍÓÚüÜñÑ!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]+/.test(content);
+
+    mayusRequirement = hasUpperCase;
+    specialCharsRequirement = hasSpecialChars;
+
+    if(mayusRequirement){
+      document.getElementById("require-1").style.color = "rgb(248 113 113)";
+    } else if(specialCharsRequirement) {
+      document.getElementById("require-2").style.color = " rgb(248 113 113)";
+    } else{
+      document.getElementById("require-1").style.color = "rgb(163 230 53)";
+      document.getElementById("require-2").style.color = "rgb(163 230 53)";
+    }
+    
     if (content !== "") {
       showWaitingTextareaMessage();
     } else {
       showEmptyTextareaMessage();
     }
+
+    const remainingChars = maxLength - content.length;
+    document.getElementById("require-3").textContent = `${remainingChars} caracteres restantes`;
+
+    if(remainingChars < 0){
+      content = content.slice(0, maxLength);
+      document.getElementById("require-3").textContent = `${0} caracteres restantes`;
+    }
+    
+    
   });
 
   // encrypt and decrypt functions
@@ -141,39 +192,50 @@ import { Icon } from "astro-icon/components";
     return text;
   };
 
+  console.log(!mayusRequirement, !specialCharsRequirement);
+
   // add event listeners to buttons
   encryptBtn.addEventListener("click", () => {
     const content = textArea.value.trim();
-    if (content.length > 0) {
+
+    const hasUpperCase = /[A-Z]/.test(content);
+    const hasSpecialChars =
+      /[áéíóúÁÉÍÓÚüÜñÑ!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]+/.test(content);
+
+    mayusRequirement = hasUpperCase;
+    specialCharsRequirement = hasSpecialChars;
+
+    if (content.length > 0 && !mayusRequirement && !specialCharsRequirement) {
       showWaitingTextareaMessage();
       outputContainer.style.justifyContent = "start";
       outputContainer.style.alignItems = "start";
       outputWaiting.style.display = "none";
       const encryptedText = encrypt(content);
       encryptedField.textContent = encryptedText;
-      console.log("--------------------");
-      console.log("encriptar", encryptedText);
-      console.log("content: ", content);
     } else {
       showEmptyTextareaMessage();
     }
-  });
 
-  decryptBtn.addEventListener("click", () => {
-    const content = textArea.value.trim();
-    if (content.length > 0) {
-      showWaitingTextareaMessage();
-      outputContainer.style.justifyContent = "start";
-      outputContainer.style.alignItems = "start";
-      outputWaiting.style.display = "none";
-      const decryptedText = decrypt(content);
-      encryptedField.textContent = decryptedText;
-      console.log("--------------------");
-      console.log("desencriptar", decryptedText);
-      console.log("content: ", content);
-    } else {
-      showEmptyTextareaMessage();
-    }
+    decryptBtn.addEventListener("click", () => {
+      const content = textArea.value.trim();
+
+      const hasUpperCase = /[A-Z]/.test(content);
+      const hasSpecialChars =
+        /[áéíóúÁÉÍÓÚüÜñÑ!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]+/.test(content);
+
+      mayusRequirement = hasUpperCase;
+      specialCharsRequirement = hasSpecialChars;
+      if (content.length > 0 && !mayusRequirement && !specialCharsRequirement) {
+        showWaitingTextareaMessage();
+        outputContainer.style.justifyContent = "start";
+        outputContainer.style.alignItems = "start";
+        outputWaiting.style.display = "none";
+        const decryptedText = decrypt(content);
+        encryptedField.textContent = decryptedText;
+      } else {
+        showEmptyTextareaMessage();
+      }
+    });
   });
 
   copyBtn.addEventListener("click", () => {
@@ -213,4 +275,7 @@ import { Icon } from "astro-icon/components";
     outputContainer.style.justifyContent = "center";
     outputContainer.style.alignItems = "center";
   }
+
+
+  
 </script>
