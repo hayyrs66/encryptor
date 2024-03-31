@@ -6,6 +6,9 @@ interface Props {
 const { title } = Astro.props;
 import Header from "@sections/Header.astro";
 import "@fontsource-variable/inter";
+
+import "../globals.css";
+
 ---
 
 <!doctype html>
@@ -24,11 +27,6 @@ import "@fontsource-variable/inter";
   </body>
 </html>
 <style is:global>
-
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-  
   * {
     margin: 0;
     padding: 0;
