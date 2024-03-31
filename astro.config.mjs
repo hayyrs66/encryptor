@@ -6,14 +6,7 @@ import icon from "astro-icon";
 
 // https://astro.build/config
 export default defineConfig({
-  integrations: [react(), tailwind(), icon(
-    {
-      include: {
-        mdi: ["github", "info"],
-      },
-    },
-
-  )],
+  integrations: [react(), tailwind(), icon()],
   site: "https://hayyrs66.github.io",
   base: "/",
 });
