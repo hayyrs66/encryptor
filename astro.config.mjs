@@ -17,5 +17,5 @@ export default defineConfig({
     }
   )],
   site: "https://hayyrs66.github.io",
-  base: "/",
+  base: "/dist",
 });
