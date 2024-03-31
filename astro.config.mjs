@@ -9,7 +9,8 @@ export default defineConfig({
   integrations: [react(), tailwind(), icon(
     {
       include: ["src/icons/*.svg"],
-    }
+    },
+
   )],
   site: "https://hayyrs66.github.io",
   base: "/",
