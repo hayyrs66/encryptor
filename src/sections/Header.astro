@@ -3,33 +3,35 @@ import { Icon } from "astro-icon/components";
 ---
 
 <header
-  class="w-full absolute top-0 left-0 flex justify-between items-center px-5 py-2 border-b border-b-white/10 backdrop-blur-2xl"
+  class="w-full absolute top-0 left-0 flex justify-center items-center px-5 py-2 border-b border-b-white/10 backdrop-blur-2xl"
 >
-  <a
-    href="/"
-    class="font-semibold text-white/90 text-xl cursor-pointer leading-snug tracking-tight"
-  >
-    <img
-      src="/logo.svg"
-      alt="Alura latinoamérica"
-      class="w-[60px] aspect-auto cursor-pointer opacity-[.9]"
-    />
-    Encriptador
-  </a>
-  <nav class="flex justify-center items-center gap-4">
+  <div class="flex w-full h-full justify-between items-center max-w-[1800px] ">
     <a
-      href="https://github.com/hayyrs66"
-      target="_blank"
-      class="flex gap-2 bg-white/10 px-2 py-1 rounded-md text-link-gray text-sm cursor-pointer text-md font-semibold transition-colors hover:text-link-gray-hover hover:bg-[#106b96]"
-      >Github
-
-      <Icon name="github" size={20} color="white" />
-    </a>
-    <a
-      href="https://ricardoguevara.vercel.app/"
-      target="_blank"
-      class="text-sm leading-snug font-semibold text-link-gray cursor-pointer text-md transition-colors hover:text-link-gray-hover"
-      >Portfolio</a
+      href="/"
+      class="font-semibold text-white/90 text-xl cursor-pointer leading-snug tracking-tight"
     >
-  </nav>
+      <img
+        src="/logo.svg"
+        alt="Alura latinoamérica"
+        class="w-[60px] aspect-auto cursor-pointer opacity-[.9]"
+      />
+      Encriptador
+    </a>
+    <nav class="flex justify-center items-center gap-4">
+      <a
+        href="https://github.com/hayyrs66"
+        target="_blank"
+        class="flex gap-2 bg-white/10 px-2 py-1 rounded-md text-link-gray text-sm cursor-pointer text-md font-semibold transition-colors hover:text-link-gray-hover hover:bg-[#106b96]"
+        >Github
+
+        <Icon name="github" size={20} color="white" />
+      </a>
+      <a
+        href="https://ricardoguevara.vercel.app/"
+        target="_blank"
+        class="text-sm leading-snug font-semibold text-link-gray cursor-pointer text-md transition-colors hover:text-link-gray-hover"
+        >Portfolio</a
+      >
+    </nav>
+  </div>
 </header>
